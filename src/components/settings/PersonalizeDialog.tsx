@@ -9,7 +9,9 @@ import {
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import OptionsList from "./OptionsList";
+import useLanguage from "../../hooks/useTranslation";
 
 interface PersonalizeModalProps {
   open: boolean;
@@ -18,6 +20,8 @@ interface PersonalizeModalProps {
 
 const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
   const { t } = useTranslation();
+  const language = useLanguage();
+  const navigate = useNavigate();
 
   return (
     <Dialog
@@ -38,7 +42,12 @@ const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
         </IconButton>
       </DialogTitle>
       <Divider />
-      <OptionsList />
+      <OptionsList
+        goToAppearance={() => {
+          onClose();
+          navigate(`/${language}/appearance`);
+        }}
+      />
     </Dialog>
   );
 };
