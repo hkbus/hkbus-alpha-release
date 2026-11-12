@@ -3,6 +3,7 @@ import {
   Avatar,
   Divider,
   List,
+  ListItem,
   ListItemButton,
   ListItemAvatar,
   ListItemText,
@@ -36,6 +37,8 @@ import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../context/AppContext";
 import { vibrate } from "../../utils";
 import { useTranslation } from "react-i18next";
+import FontSizeSlider from "./FontSizeSlider";
+import FormatSizeIcon from "@mui/icons-material/FormatSize";
 import { CUSTOM_THEME_ID, getPreset } from "../../theme";
 
 interface OptionsListProps {
@@ -147,6 +150,14 @@ const OptionsList = ({ goToAppearance }: OptionsListProps) => {
           )}`}
         />
       </ListItemButton>
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+            <FormatSizeIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <FontSizeSlider />
+      </ListItem>
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);

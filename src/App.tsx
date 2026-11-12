@@ -44,7 +44,6 @@ const DataExportPage = React.lazy(() => import("./pages/DataExportPage"));
 const CollectionEditorPage = React.lazy(
   () => import("./pages/CollectionEditorPage")
 );
-const AppearancePage = React.lazy(() => import("./pages/AppearancePage"));
 
 const App = () => {
   const { analytics, colorMode, fontSize, themeId, customTheme } =
@@ -110,7 +109,6 @@ const App = () => {
                     path={`collections-edit`}
                     element={<CollectionEditorPage />}
                   />
-                  <Route path={`appearance`} element={<AppearancePage />} />
                   <Route path={`board`} element={<RouteBoardPage />} />
                   <Route path={`stops`} element={<BookmarkedStopPage />} />
                   <Route path={`search`} element={<RouteSearchPage />} />
