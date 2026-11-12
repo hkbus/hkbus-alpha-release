@@ -36,7 +36,6 @@ import {
   removeItem,
 } from "../utils/collectionOps";
 import ItemList from "../components/collection-editor/ItemList";
-import CollectionSchedule from "../components/layout/collections/CollectionSchedule";
 import AddSearchDialog from "../components/collection-editor/AddSearchDialog";
 
 const STOPS = -1; // pseudo target for the saved-stops list
@@ -58,6 +57,7 @@ const CollectionEditorPage = () => {
     setCollections,
     setSavedEtas,
     setSavedStops,
+    toggleCollectionDialog,
   } = useContext(CollectionContext);
 
   const [open, setOpen] = useState<Record<string, boolean>>({
@@ -327,60 +327,38 @@ const CollectionEditorPage = () => {
           )}
         </Box>
         {expanded && (
-          <>
-            <ItemList
-              droppableId={`c-${index}`}
-              type="route"
-              isDropDisabled={
-                !!dragging &&
-                dragging.from !== `c-${index}` &&
-                c.list.includes(dragging.item)
-              }
-              items={c.list}
-              emptyText={t("此收藏未有路線，按「+」新增")}
-              onMove={(from, to) =>
-                commit(
-                  all.map((x, i) =>
-                    i === index
-                      ? { ...x, list: moveWithin(x.list, from, to) }
-                      : x
-                  ),
-                  null
-                )
-              }
-              onRemove={(item) =>
-                commit(
-                  all.map((x, i) => (i === index ? removeItem(x, item) : x)),
-                  t("已移除路線")
-                )
-              }
-              moveTargets={moveTargetsFor(index)}
-              onMoveTo={(item, to) =>
-                commit(
-                  moveBetween(all, item, index, to),
-                  t("已移動路線至 {{name}}", { name: displayName(to) })
-                )
-              }
-            />
-            {!isFav && (
-              <Box sx={{ p: 1.5, pt: 1, borderTop: 1, borderColor: "divider" }}>
-                <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                  {t("顯示時間")}
-                </Typography>
-                <CollectionSchedule
-                  schedules={c.schedules}
-                  onChange={(schedules) =>
-                    commit(
-                      all.map((x, i) =>
-                        i === index ? { ...x, schedules } : x
-                      ),
-                      null
-                    )
-                  }
-                />
-              </Box>
-            )}
-          </>
+          <ItemList
+            droppableId={`c-${index}`}
+            type="route"
+            isDropDisabled={
+              !!dragging &&
+              dragging.from !== `c-${index}` &&
+              c.list.includes(dragging.item)
+            }
+            items={c.list}
+            emptyText={t("此收藏未有路線，按「+」新增")}
+            onMove={(from, to) =>
+              commit(
+                all.map((x, i) =>
+                  i === index ? { ...x, list: moveWithin(x.list, from, to) } : x
+                ),
+                null
+              )
+            }
+            onRemove={(item) =>
+              commit(
+                all.map((x, i) => (i === index ? removeItem(x, item) : x)),
+                t("已移除路線")
+              )
+            }
+            moveTargets={moveTargetsFor(index)}
+            onMoveTo={(item, to) =>
+              commit(
+                moveBetween(all, item, index, to),
+                t("已移動路線至 {{name}}", { name: displayName(to) })
+              )
+            }
+          />
         )}
       </Paper>
     );
@@ -539,6 +517,15 @@ const CollectionEditorPage = () => {
           }}
         >
           {t("重新命名")}
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            // existing dialog (mounted in Root) edits the day/time schedule; index excludes Starred
+            toggleCollectionDialog(menu!.index - 1, "time");
+            setMenu(null);
+          }}
+        >
+          {t("設定時段")}
         </MenuItem>
         <MenuItem
           onClick={() => {

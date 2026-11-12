@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import {
   Box,
   Dialog,
@@ -23,10 +23,10 @@ const CollectionDialog = () => {
   const {
     collections,
     collectionIdx,
+    collectionDialogTab,
     toggleCollectionDialog,
     updateCollectionName,
     removeCollection,
-    setCollectionSchedules,
     savedEtas,
   } = useContext(CollectionContext);
 
@@ -41,7 +41,12 @@ const CollectionDialog = () => {
     };
   }, [collections, collectionIdx, savedEtas]);
 
-  const [tab, changeTab] = useState<"time" | "routes">("routes");
+  const [tab, changeTab] = useState<"time" | "routes">(collectionDialogTab);
+
+  // dialog stays mounted in Root; re-sync the tab each time it is opened
+  useEffect(() => {
+    changeTab(collectionDialogTab);
+  }, [collectionIdx, collectionDialogTab]);
 
   const handleCollectionRemoval = useCallback(() => {
     if (
@@ -84,12 +89,7 @@ const CollectionDialog = () => {
         </Tabs>
         <Box sx={mainSx}>
           {tab === "routes" && <CollectionRoute />}
-          {tab === "time" && (
-            <CollectionSchedule
-              schedules={collection.schedules}
-              onChange={setCollectionSchedules}
-            />
-          )}
+          {tab === "time" && <CollectionSchedule />}
         </Box>
       </DialogContent>
       {collectionIdx !== -1 && (

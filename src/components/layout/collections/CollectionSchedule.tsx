@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Box,
@@ -20,6 +20,7 @@ import {
   DeleteOutline as DeleteIcon,
 } from "@mui/icons-material";
 import dayjs, { Dayjs } from "dayjs";
+import CollectionContext from "../../../CollectionContext";
 import { DaySchedule } from "../../../@types/types";
 
 type Time = DaySchedule["start"];
@@ -55,13 +56,18 @@ const toDayjs = ({ hour, minute }: Time) => dayjs().hour(hour).minute(minute);
 const expand = (slot: Slot): DaySchedule[] =>
   slot.days.map((day) => ({ day, start: slot.start, end: slot.end }));
 
-interface Props {
-  schedules: DaySchedule[];
-  onChange: (schedules: DaySchedule[]) => void;
-}
-
-const CollectionSchedule = ({ schedules, onChange }: Props) => {
+const CollectionSchedule = () => {
   const { t } = useTranslation();
+  const { collections, collectionIdx, setCollectionSchedules } =
+    useContext(CollectionContext);
+
+  const schedules = useMemo(
+    () =>
+      collectionIdx !== null && collectionIdx >= 0
+        ? collections[collectionIdx]?.schedules ?? []
+        : [],
+    [collections, collectionIdx]
+  );
 
   const slots: Slot[] = useMemo(() => {
     const map = new Map<string, Slot>();
@@ -72,6 +78,10 @@ const CollectionSchedule = ({ schedules, onChange }: Props) => {
     });
     return [...map.values()];
   }, [schedules]);
+
+  if (collectionIdx === null || collectionIdx < 0) {
+    return null;
+  }
 
   // replace one slot (or remove it when next is null), keeping the others in order
   const replaceSlot = (slot: Slot, next: Slot | null) => {
@@ -85,7 +95,7 @@ const CollectionSchedule = ({ schedules, onChange }: Props) => {
         placed = true;
       }
     });
-    onChange(out);
+    setCollectionSchedules(out);
   };
 
   const toggleDay = (slot: Slot, day: number) => {
@@ -128,7 +138,10 @@ const CollectionSchedule = ({ schedules, onChange }: Props) => {
     while (taken.has(timeKey({ start, end }))) {
       end = { hour: end.hour, minute: (end.minute + 1) % 60 };
     }
-    onChange([...schedules, ...expand({ start, end, days: WEEKDAYS })]);
+    setCollectionSchedules([
+      ...schedules,
+      ...expand({ start, end, days: WEEKDAYS }),
+    ]);
   };
 
   const onPick = (slot: Slot, which: "start" | "end") => (v: Dayjs | null) => {
