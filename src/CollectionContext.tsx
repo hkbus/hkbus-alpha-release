@@ -26,6 +26,7 @@ interface CollectionContextValue extends CollectionState {
   updateCollectionName: (v: any) => void;
   addCollectionSchedule: () => void;
   removeCollectionSchedule: (idx: number) => void;
+  setCollectionSchedules: (schedules: DaySchedule[]) => void;
   updateCollectionSchedule: (
     idx: number,
     field: keyof DaySchedule,
@@ -241,6 +242,15 @@ export const CollectionContextProvider = ({
     );
   }, []);
 
+  const setCollectionSchedules = useCallback((schedules: DaySchedule[]) => {
+    setStateRaw(
+      produce((state: State) => {
+        if (state.collectionIdx === null) return;
+        state.collections[state.collectionIdx].schedules = schedules;
+      })
+    );
+  }, []);
+
   const removeCollectionSchedule = useCallback((idx: number) => {
     setStateRaw(
       produce((state: State) => {
@@ -344,6 +354,7 @@ export const CollectionContextProvider = ({
       updateCollectionSchedule,
       addCollectionSchedule,
       removeCollectionSchedule,
+      setCollectionSchedules,
       toggleCollectionEta,
       setCollectionEtas,
       setCollections,
@@ -363,6 +374,7 @@ export const CollectionContextProvider = ({
       updateCollectionSchedule,
       addCollectionSchedule,
       removeCollectionSchedule,
+      setCollectionSchedules,
       toggleCollectionEta,
       setCollectionEtas,
       setCollections,
