@@ -11,6 +11,7 @@ export interface CollectionState {
   collections: RouteCollection[];
   collectionDrawerRoute: string | null;
   collectionIdx: number | null;
+  collectionDialogTab: "routes" | "time";
 }
 
 interface CollectionContextValue extends CollectionState {
@@ -21,7 +22,7 @@ interface CollectionContextValue extends CollectionState {
   setCollectionDrawerRoute: (routeId: string | null) => void;
   addNewCollection: () => void;
   removeCollection: (idx: number) => void;
-  toggleCollectionDialog: (idx: number | null) => void;
+  toggleCollectionDialog: (idx: number | null, tab?: "routes" | "time") => void;
   updateCollectionName: (v: any) => void;
   addCollectionSchedule: () => void;
   removeCollectionSchedule: (idx: number) => void;
@@ -106,6 +107,7 @@ export const CollectionContextProvider = ({
       ],
       collectionDrawerRoute: null,
       collectionIdx: null,
+      collectionDialogTab: "routes",
     };
   };
 
@@ -163,13 +165,17 @@ export const CollectionContextProvider = ({
     );
   }, []);
 
-  const toggleCollectionDialog = useCallback((idx: number | null) => {
-    setStateRaw(
-      produce((state: State) => {
-        state.collectionIdx = idx;
-      })
-    );
-  }, []);
+  const toggleCollectionDialog = useCallback(
+    (idx: number | null, tab: "routes" | "time" = "routes") => {
+      setStateRaw(
+        produce((state: State) => {
+          state.collectionIdx = idx;
+          state.collectionDialogTab = tab;
+        })
+      );
+    },
+    []
+  );
 
   const addNewCollection = useCallback(() => {
     setStateRaw(

@@ -521,7 +521,7 @@ const CollectionEditorPage = () => {
         <MenuItem
           onClick={() => {
             // existing dialog (mounted in Root) edits the day/time schedule; index excludes Starred
-            toggleCollectionDialog(menu!.index - 1);
+            toggleCollectionDialog(menu!.index - 1, "time");
             setMenu(null);
           }}
         >
