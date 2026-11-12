@@ -186,6 +186,7 @@ const resources = {
       "weekday-6": "SAT",
       missing_schedule: "Add Schedule",
       全日: "All day",
+      完成: "Done",
       "add-time-slot": "Add time slot",
       路線收藏: "Route Collections",
       "color-system": "Same as System",

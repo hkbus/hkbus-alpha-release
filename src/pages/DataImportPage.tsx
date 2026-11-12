@@ -113,7 +113,6 @@ const DataImport = () => {
       collections: obj.collections ?? [],
       collectionDrawerRoute: null,
       collectionIdx: null,
-      collectionDialogTab: "routes",
     });
     importAppState({
       geoPermission: null,

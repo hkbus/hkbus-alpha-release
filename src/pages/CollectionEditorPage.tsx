@@ -36,6 +36,7 @@ import {
   removeItem,
 } from "../utils/collectionOps";
 import ItemList from "../components/collection-editor/ItemList";
+import ScheduleDialog from "../components/collection-editor/ScheduleDialog";
 import AddSearchDialog from "../components/collection-editor/AddSearchDialog";
 
 const STOPS = -1; // pseudo target for the saved-stops list
@@ -57,7 +58,6 @@ const CollectionEditorPage = () => {
     setCollections,
     setSavedEtas,
     setSavedStops,
-    toggleCollectionDialog,
   } = useContext(CollectionContext);
 
   const [open, setOpen] = useState<Record<string, boolean>>({
@@ -68,6 +68,7 @@ const CollectionEditorPage = () => {
   const [menu, setMenu] = useState<{ el: HTMLElement; index: number } | null>(
     null
   );
+  const [scheduling, setScheduling] = useState<number | null>(null); // index in `all`
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
   const [adding, setAdding] = useState<number | null>(null); // index in `all`, or STOPS
   const [undo, setUndo] = useState<{ message: string; snap: Snapshot } | null>(
@@ -520,8 +521,7 @@ const CollectionEditorPage = () => {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            // existing dialog (mounted in Root) edits the day/time schedule; index excludes Starred
-            toggleCollectionDialog(menu!.index - 1, "time");
+            setScheduling(menu!.index);
             setMenu(null);
           }}
         >
@@ -596,6 +596,21 @@ const CollectionEditorPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {scheduling !== null && all[scheduling] && (
+        <ScheduleDialog
+          open
+          name={all[scheduling].name}
+          schedules={all[scheduling].schedules}
+          onChange={(schedules) =>
+            commit(
+              all.map((x, i) => (i === scheduling ? { ...x, schedules } : x)),
+              null
+            )
+          }
+          onClose={() => setScheduling(null)}
+        />
+      )}
 
       <AddSearchDialog
         open={adding !== null}
