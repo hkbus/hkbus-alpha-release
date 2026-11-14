@@ -31,6 +31,7 @@ import {
   PushPin as PinIcon,
   Update as UpdateIcon,
   UpdateDisabled as UpdateDisabledIcon,
+  FormatSize as FormatSizeIcon,
   LooksOneRounded as LooksOneRoundedIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
@@ -38,7 +39,6 @@ import AppContext from "../../context/AppContext";
 import { vibrate } from "../../utils";
 import { useTranslation } from "react-i18next";
 import FontSizeSlider from "./FontSizeSlider";
-import FormatSizeIcon from "@mui/icons-material/FormatSize";
 import { CUSTOM_THEME_ID, getPreset } from "../../theme";
 
 interface OptionsListProps {
