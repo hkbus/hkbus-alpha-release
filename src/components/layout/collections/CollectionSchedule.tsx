@@ -103,7 +103,7 @@ const CollectionSchedule = ({ schedules, onChange }: Props) => {
   const summary = (slot: Slot) => {
     const picked = DAY_ORDER.filter((d) => slot.days.includes(d));
     const parts: string[] = [];
-    for (let i = 0; i < picked.length; ) {
+    for (let i = 0; i < picked.length;) {
       let j = i;
       while (
         j + 1 < picked.length &&
