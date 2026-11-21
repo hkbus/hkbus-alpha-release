@@ -19,6 +19,7 @@ import {
   DarkMode as DarkModeIcon,
   SettingsBrightness as SettingsBrightnessIcon,
   WbSunny as WbSunnyIcon,
+  WbTwilight as WbTwilightIcon,
   AllInclusive as AllInclusiveIcon,
   FilterAlt as FilterAltIcon,
   Vibration as VibrationIcon,
@@ -38,8 +39,13 @@ import AppContext from "../../context/AppContext";
 import { vibrate } from "../../utils";
 import { useTranslation } from "react-i18next";
 import FontSizeSlider from "./FontSizeSlider";
+import { CUSTOM_THEME_ID, getPreset } from "../../theme";
 
-const OptionsList = () => {
+interface OptionsListProps {
+  goToAppearance: () => void;
+}
+
+const OptionsList = ({ goToAppearance }: OptionsListProps) => {
   const {
     resetUsageRecord,
     isRouteFilter,
@@ -51,7 +57,7 @@ const OptionsList = () => {
     etaFormat,
     toggleEtaFormat,
     _colorMode: colorMode,
-    toggleColorMode,
+    themeId,
     energyMode,
     toggleEnergyMode,
     platformMode,
@@ -126,7 +132,7 @@ const OptionsList = () => {
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
-          toggleColorMode();
+          goToAppearance();
         }}
       >
         <ListItemAvatar>
@@ -134,9 +140,15 @@ const OptionsList = () => {
             {colorMode === "system" && <SettingsBrightnessIcon />}
             {colorMode === "light" && <WbSunnyIcon />}
             {colorMode === "dark" && <DarkModeIcon />}
+            {colorMode === "sun" && <WbTwilightIcon />}
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={t("外觀")} secondary={t(`color-${colorMode}`)} />
+        <ListItemText
+          primary={t("外觀")}
+          secondary={`${t(`color-${colorMode}`)} · ${t(
+            themeId === CUSTOM_THEME_ID ? "自訂" : getPreset(themeId).name
+          )}`}
+        />
       </ListItemButton>
       <ListItem>
         <ListItemAvatar>
