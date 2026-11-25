@@ -245,7 +245,6 @@ const resources = {
       "搜尋路線編號、目的地或車站": "Search route no., destination or stop",
       "輸入路線編號、目的地或車站名稱開始搜尋":
         "Type a route number, destination or stop name to start",
-      找不到結果: "No results found",
       加入: "Add",
       全部: "All",
       篩選: "Filter",
